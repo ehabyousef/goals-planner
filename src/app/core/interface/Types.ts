@@ -17,3 +17,14 @@ export interface IGoal {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface ILogin {
+  email: string | null;
+  password: string | null;
+}
+
+export interface IRegister {
+  userName: string | null;
+  email: string | null;
+  password: string | null;
+}

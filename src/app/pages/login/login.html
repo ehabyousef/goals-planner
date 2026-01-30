@@ -1,5 +1,9 @@
 <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-  <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+  <form
+    [formGroup]="loginForm"
+    (ngSubmit)="onSignIn()"
+    class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md"
+  >
     <!-- Header -->
     <div class="text-center mb-8">
       <h1 class="text-2xl font-bold text-gray-900 mb-2">Sign In to Goals Planner</h1>
@@ -12,12 +16,22 @@
       <input
         pInputText
         id="email"
-        [(ngModel)]="email"
+        formControlName="email"
         type="email"
         placeholder="Enter your email"
         class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       />
     </div>
+    @if (shouldShowError('email')) {
+      <div class="valid">
+        <p-message
+          severity="error"
+          icon="pi pi-times-circle"
+          [text]="getErrorMessage('email')"
+          styleClass="mb-2"
+        />
+      </div>
+    }
 
     <!-- Password Field -->
     <div class="mb-4">
@@ -26,7 +40,7 @@
         <a href="#" class="text-sm text-blue-600 hover:text-blue-700">Forgot password?</a>
       </div>
       <p-password
-        [(ngModel)]="password"
+        formControlName="password"
         [toggleMask]="true"
         [feedback]="false"
         placeholder="Enter your password"
@@ -34,11 +48,20 @@
         styleClass="w-full"
       ></p-password>
     </div>
-
+    @if (shouldShowError('password')) {
+      <div class="valid">
+        <p-message
+          severity="error"
+          icon="pi pi-times-circle"
+          [text]="getErrorMessage('password')"
+          styleClass="mb-2"
+        />
+      </div>
+    }
     <!-- Remember Me Checkbox -->
     <div class="mb-6">
       <div class="flex items-center">
-        <p-checkbox [(ngModel)]="rememberMe" [binary]="true" inputId="remember"></p-checkbox>
+        <p-checkbox [binary]="true" inputId="remember"></p-checkbox>
         <label for="remember" class="ml-2 text-sm text-gray-700">Remember me</label>
       </div>
     </div>
@@ -46,11 +69,11 @@
     <!-- Sign In Button -->
     <button
       pButton
-      (click)="onSignIn()"
-      label="Sign In"
+      type="submit"
+      [label]="isSubmitting() ? 'loading...' : 'sign in'"
       class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-md mb-6"
     ></button>
-  </div>
+  </form>
 
   <!-- Footer -->
   <div class="absolute bottom-4 text-center w-full">
