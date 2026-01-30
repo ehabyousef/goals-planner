@@ -14,7 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { Auth } from '../../core/services/auth';
 import { ILogin } from '../../core/interface/Types';
 import { MessageService } from 'primeng/api';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MessageModule } from 'primeng/message';
 
 @Component({
@@ -28,7 +28,8 @@ import { MessageModule } from 'primeng/message';
     ButtonModule,
     MessageModule,
     ReactiveFormsModule,
-  ],
+    RouterLink
+],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
