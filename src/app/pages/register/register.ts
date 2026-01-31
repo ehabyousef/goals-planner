@@ -7,35 +7,32 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { CheckboxModule } from 'primeng/checkbox';
-import { ButtonModule } from 'primeng/button';
+import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { Auth } from '../../core/services/auth';
-import { ILogin, IRegister } from '../../core/interface/Types';
-import { MessageService } from 'primeng/api';
+import { IRegister } from '../../core/interface/Types';
 import { Router, RouterLink } from '@angular/router';
-import { MessageModule } from 'primeng/message';
+import { toast } from 'ngx-sonner';
 @Component({
   selector: 'app-register',
   imports: [
     CommonModule,
     FormsModule,
-    InputTextModule,
-    PasswordModule,
-    CheckboxModule,
-    ButtonModule,
-    MessageModule,
+    HlmInputImports,
+    HlmButtonImports,
+    HlmCheckboxImports,
+    HlmLabelImports,
     ReactiveFormsModule,
-    RouterLink
-],
+    RouterLink,
+  ],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
 export class Register {
   constructor(
     private _AuthService: Auth,
-    private messageService: MessageService,
     private router: Router,
   ) {}
 
@@ -91,25 +88,16 @@ export class Register {
     this._AuthService.register(data).subscribe({
       next: (res) => {
         if (res.token) {
-          this.showToast('success', 'success', 'sign in successed');
+          toast.success('Registration successful');
           this._AuthService.setToken(res.token);
           this.router.navigate(['/']);
         }
       },
       error: (err) => {
         console.error('Register error:', err);
-        const errorMessage = err.message || 'Invalid email or password';
-        this.showToast('error', 'Register Failed', errorMessage);
+        const errorMessage = err.message || 'Registration failed';
+        toast.error('Registration Failed', { description: errorMessage });
       },
-    });
-  }
-
-  showToast(severity: string, summary: string, detail: string) {
-    this.messageService.add({
-      severity: severity,
-      summary: summary,
-      detail: detail,
-      life: 1500,
     });
   }
 }

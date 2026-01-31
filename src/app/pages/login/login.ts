@@ -1,3 +1,8 @@
+import { toast } from 'ngx-sonner';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmInputImports } from '@spartan-ng/helm/input';
 import { Component, signal } from '@angular/core';
 import {
   FormControl,
@@ -7,36 +12,28 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { CheckboxModule } from 'primeng/checkbox';
-import { ButtonModule } from 'primeng/button';
 import { Auth } from '../../core/services/auth';
 import { ILogin } from '../../core/interface/Types';
-import { MessageService } from 'primeng/api';
 import { Router, RouterLink } from '@angular/router';
-import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-login',
   imports: [
     CommonModule,
     FormsModule,
-    InputTextModule,
-    PasswordModule,
-    CheckboxModule,
-    ButtonModule,
-    MessageModule,
+    HlmInputImports,
+    HlmButtonImports,
+    HlmCheckboxImports,
+    HlmLabelImports,
     ReactiveFormsModule,
-    RouterLink
-],
+    RouterLink,
+  ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
   constructor(
     private _AuthService: Auth,
-    private messageService: MessageService,
     private router: Router,
   ) {}
 
@@ -76,7 +73,6 @@ export class Login {
 
   onSignIn() {
     if (this.loginForm.valid) {
-      this.isSubmitting.set(true);
       const formData = this.loginForm.getRawValue();
       this.Login(formData);
     } else {
@@ -85,28 +81,24 @@ export class Login {
   }
 
   Login(data: ILogin): void {
+    this.isSubmitting.set(true);
     this._AuthService.login(data).subscribe({
       next: (res) => {
         if (res.token) {
-          this.showToast('success', 'success', 'sign in successed');
+          toast.success('Sign in successful');
           this._AuthService.setToken(res.token);
-          this.router.navigate(['/']);
+          this.isSubmitting.set(false);
+          setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 2000);
         }
       },
       error: (err) => {
+        this.isSubmitting.set(false);
         console.error('Login error:', err);
         const errorMessage = err.message || 'Invalid email or password';
-        this.showToast('error', 'Login Failed', errorMessage);
+        toast.error('Login Failed', { description: errorMessage });
       },
-    });
-  }
-
-  showToast(severity: string, summary: string, detail: string) {
-    this.messageService.add({
-      severity: severity,
-      summary: summary,
-      detail: detail,
-      life: 1500,
     });
   }
 }
