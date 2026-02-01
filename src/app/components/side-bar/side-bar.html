@@ -2,7 +2,7 @@
   <hlm-sidebar collapsible="icon">
     <div hlmSidebarContent>
       <div hlmSidebarGroup>
-        <div hlmSidebarGroupLabel>Goals Planner</div>
+        <div hlmSidebarGroupLabel class="dark:text-slate-200 text-gray-950">Goals Planner</div>
         <div hlmSidebarGroupContent>
           <ul hlmSidebarMenu>
             @for (project of _projects; track project) {
@@ -30,10 +30,13 @@
     </div>
   </hlm-sidebar>
   <main hlmSidebarInset>
-    <header class="flex h-12 w-12 px-4">
+    <header
+      class="flex h-16 items-center gap-4 border-b bg-white dark:bg-gray-900 dark:border-gray-800 px-4"
+    >
       <button hlmSidebarTrigger><span class="sr-only">Toggle Sidebar</span></button>
+      <ng-content select="[navbar]"></ng-content>
     </header>
-    <div class="p-4">
+    <div class="p-4 dark:bg-gray-900">
       <ng-content></ng-content>
     </div>
   </main>

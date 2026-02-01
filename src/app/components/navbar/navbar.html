@@ -1,1 +1,46 @@
-<p>navbar works!</p>
+<!-- Left: Dashboard Title -->
+<h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Dashboard</h1>
+
+<!-- Center: Search Input -->
+<div class="flex-1 max-w-md mx-8">
+  <div class="relative">
+    <ng-icon
+      class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+      name="lucideSearch"
+      size="18"
+    />
+    <input
+      hlmInput
+      type="text"
+      placeholder="Search tasks, goals or projects..."
+      class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
+    />
+  </div>
+</div>
+
+<!-- Right: Notifications, Messages, and User Profile -->
+<div class="flex items-center gap-4">
+  <!-- Notification Bell -->
+  <button hlmBtn variant="ghost" size="icon" class="relative">
+    <ng-icon name="lucideBell" size="20" />
+    <span class="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+  </button>
+
+  <!-- Messages -->
+  <button
+    hlmBtn
+    variant="ghost"
+    size="icon"
+    (click)="toggleTheme()"
+  >
+    <ng-icon name="lucideSunMoon" size="20" />
+  </button>
+
+  <!-- User Profile -->
+  <div class="flex items-center gap-3 pl-4 border-l dark:border-gray-700">
+    <div class="text-right">
+      <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Alex Rivera</p>
+      <p class="text-xs text-gray-500 dark:text-gray-400">Premium User</p>
+    </div>
+  </div>
+</div>
