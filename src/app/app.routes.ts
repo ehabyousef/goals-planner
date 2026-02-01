@@ -3,12 +3,24 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/goals',
-    pathMatch: 'full',
+    loadComponent: () => import('./pages/layout/layout').then((c) => c.Layout),
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'goals',
+      },
       {
         path: 'goals',
         loadComponent: () => import('./pages/goals/goals').then((c) => c.Goals),
+      },
+      {
+        path: 'tasks',
+        loadComponent: () => import('./pages/tasks/tasks').then((c) => c.Tasks),
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./pages/settings/settings').then((c) => c.Settings),
       },
     ],
   },

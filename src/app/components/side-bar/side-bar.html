@@ -1,1 +1,40 @@
-<p>side-bar works!</p>
+<div hlmSidebarWrapper [sidebarWidthIcon]="'4.5rem'">
+  <hlm-sidebar collapsible="icon">
+    <div hlmSidebarContent>
+      <div hlmSidebarGroup>
+        <div hlmSidebarGroupLabel>Goals Planner</div>
+        <div hlmSidebarGroupContent>
+          <ul hlmSidebarMenu>
+            @for (project of _projects; track project) {
+              <li hlmSidebarMenuItem>
+                <button hlmSidebarMenuButton [routerLink]="project.url">
+                  <ng-icon hlm [name]="project.icon" />
+                  <span>{{ project.name }}</span>
+                </button>
+                <div hlmSidebarMenuBadge>{{ project.info }}</div>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div hlmSidebarFooter>
+      <ul hlmSidebarMenu>
+        <li hlmSidebarMenuItem>
+          <button hlmSidebarMenuButton>
+            <ng-icon hlm name="lucideLogOut" />
+            <span>Logout</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </hlm-sidebar>
+  <main hlmSidebarInset>
+    <header class="flex h-12 w-12 px-4">
+      <button hlmSidebarTrigger><span class="sr-only">Toggle Sidebar</span></button>
+    </header>
+    <div class="p-4">
+      <ng-content></ng-content>
+    </div>
+  </main>
+</div>
