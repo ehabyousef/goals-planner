@@ -12,10 +12,12 @@ import {
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { RouterLink } from "@angular/router";
+import { Modal } from '../../components/modal/modal';
+import { BrnDialogImports } from '@spartan-ng/brain/dialog';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [HlmIcon, NgIcon, HlmProgressImports, HlmButtonImports, RouterLink],
+  imports: [HlmIcon, NgIcon, HlmProgressImports, HlmButtonImports, RouterLink, Modal, BrnDialogImports],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
   providers: [

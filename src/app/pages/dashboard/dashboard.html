@@ -8,6 +8,7 @@
       hlmBtn
       variant="outline"
       size="sm"
+      (click)="modalComponent.openDialog()"
       class="newBtn p-6 rounded-xl text-md font-bold flex items-center gap-2 text-white border-none"
     >
       <ng-icon hlm size="sm" name="lucidePlus" />
@@ -18,7 +19,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 my-4">
     <div class="mx-auto w-full max-w-xl ring-0 bg-[var(--sidebar)] shadow-md p-4 rounded-xl">
       <div class="w-full flex justify-between items-center">
-        <h2 class="text-3xl">Active Goals</h2>
+        <h2 class="text-2xl">Active Goals</h2>
         <ng-icon hlm size="xl" name="lucideFlag" />
       </div>
       <p class="text-5xl my-2">4</p>
@@ -122,4 +123,10 @@
       </div>
     </div>
   </div>
+
+  <app-modal
+    #modalComponent
+    [title]="'Create New Goal'"
+    [description]="'Fill in the details to create a new goal. Click save when you are done.'"
+  />
 </div>
