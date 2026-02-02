@@ -1,34 +1,141 @@
 <hlm-dialog [state]="isOpen()" (stateChanged)="isOpen.set($event)">
   <hlm-dialog-content
-    class="sm:max-w-[500px] bg-slate-200 dark:bg-slate-950"
+    class="sm:max-w-[600px] w-[50vw] bg-slate-200 dark:bg-slate-950 max-h-[90vh] overflow-y-auto"
     *brnDialogContent="let ctx"
   >
     <hlm-dialog-header>
       <h3 hlmDialogTitle class="text-xl font-semibold">{{ title() }}</h3>
       <p hlmDialogDescription class="text-sm">{{ description() }}</p>
     </hlm-dialog-header>
-    <div class="grid gap-4 py-4">
-      <div class="grid gap-2">
-        <label hlmLabel for="name">Name</label>
-        <input hlmInput id="name" placeholder="Pedro Duarte" class="w-full" />
+
+    <form [formGroup]="formData" (ngSubmit)="onSubmit()">
+      <div class="grid gap-4 py-4">
+        <div class="grid gap-2">
+          <label hlmLabel for="title">Title <span class="text-red-500">*</span></label>
+          <input
+            hlmInput
+            id="title"
+            formControlName="title"
+            placeholder="Enter goal title (2-100 characters)"
+            class="w-full"
+          />
+          @if (formData.get('title')?.invalid && formData.get('title')?.touched) {
+            <span class="text-xs text-red-500">Title is required (2-100 characters)</span>
+          }
+        </div>
+
+        <div class="grid gap-2">
+          <label hlmLabel for="description">Description <span class="text-red-500">*</span></label>
+          <textarea
+            hlmInput
+            id="description"
+            formControlName="description"
+            placeholder="Enter goal description (2-500 characters)"
+            class="w-full min-h-[100px]"
+            rows="4"
+          ></textarea>
+          @if (formData.get('description')?.invalid && formData.get('description')?.touched) {
+            <span class="text-xs text-red-500">Description is required (2-500 characters)</span>
+          }
+        </div>
+
+        <div class="grid gap-2">
+          <label hlmLabel for="category_id">Category <span class="text-red-500">*</span></label>
+          <brn-select class="inline-block" placeholder="Select a category" formControlName="category_id">
+            <hlm-select-trigger class="w-full">
+              <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content class="dark:bg-gray-950 bg-slate-200">
+              @for (item of categories(); track $index) {
+                <hlm-option [value]="item.id">{{ item?.Name }}</hlm-option>
+              }
+            </hlm-select-content>
+          </brn-select>
+          @if (formData.get('category_id')?.invalid && formData.get('category_id')?.touched) {
+            <span class="text-xs text-red-500">Category is required</span>
+          }
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="grid gap-2">
+            <label hlmLabel for="priority">Priority</label>
+            <brn-select class="inline-block" placeholder="Select priority" formControlName="priority">
+              <hlm-select-trigger class="w-full">
+                <hlm-select-value />
+              </hlm-select-trigger>
+              <hlm-select-content class="dark:bg-gray-950 bg-slate-200">
+                <hlm-option value="LOW">Low</hlm-option>
+                <hlm-option value="MEDIUM">MEDIUM</hlm-option>
+                <hlm-option value="HIGH">HIGH</hlm-option>
+              </hlm-select-content>
+            </brn-select>
+          </div>
+
+          <div class="grid gap-2">
+            <label hlmLabel for="status">Status</label>
+            <brn-select class="inline-block" placeholder="Select status" formControlName="status">
+              <hlm-select-trigger class="w-full">
+                <hlm-select-value />
+              </hlm-select-trigger>
+              <hlm-select-content class="dark:bg-gray-950 bg-slate-200">
+                <hlm-option value="ACTIVE">ACTIVE</hlm-option>
+                <hlm-option value="COMPLETED">COMPLETED</hlm-option>
+                <hlm-option value="ARCHIVED">ARCHIVED</hlm-option>
+              </hlm-select-content>
+            </brn-select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="grid gap-2">
+            <label hlmLabel for="start_date">Start Date</label>
+            <input
+              hlmInput
+              id="start_date"
+              type="date"
+              formControlName="start_date"
+              class="w-full"
+            />
+          </div>
+
+          <div class="grid gap-2">
+            <label hlmLabel for="end_date">End Date</label>
+            <input hlmInput id="end_date" type="date" formControlName="end_date" class="w-full" />
+          </div>
+        </div>
+
+        <div class="grid gap-2">
+          <label hlmLabel for="image">Image URL (Optional)</label>
+          <input hlmInput id="picture" type="file" />
+          <!-- <input
+            hlmInput
+            id="image"
+            formControlName="image"
+            placeholder="Enter image URL"
+            class="w-full"
+          /> -->
+        </div>
       </div>
-      <div class="grid gap-2">
-        <label hlmLabel for="username">Username</label>
-        <input hlmInput id="username" placeholder="@peduarte" class="w-full" />
-      </div>
-    </div>
-    <hlm-dialog-footer class="flex gap-2">
-      <button
-        hlmBtn
-        variant="outline"
-        (click)="isOpen.set('closed')"
-        class="flex-1 ring-1 ring-red-500"
-      >
-        Cancel
-      </button>
-      <button hlmBtn type="submit" class="flex-1 ring-1 ring-black dark:ring-white">
-        Save changes
-      </button>
-    </hlm-dialog-footer>
+
+      <hlm-dialog-footer class="flex gap-2">
+        <button
+          hlmBtn
+          variant="outline"
+          type="button"
+          (click)="isOpen.set('closed')"
+          class="flex-1 ring-1 ring-red-500"
+        >
+          Cancel
+        </button>
+        <button
+          hlmBtn
+          type="submit"
+          [disabled]="formData.invalid"
+          class="flex-1 ring-1 ring-black dark:ring-white"
+        >
+          Save changes
+        </button>
+      </hlm-dialog-footer>
+    </form>
   </hlm-dialog-content>
 </hlm-dialog>

@@ -22,4 +22,20 @@ export class Auth {
       localStorage.setItem('token', token);
     }
   }
+  getToken(): string | null {
+    if (isPlatformBrowser(this._platformId)) {
+      return localStorage.getItem('token');
+    }
+    return null;
+  }
+  logout(): void {
+    if (isPlatformBrowser(this._platformId)) {
+      localStorage.removeItem('token');
+    }
+  }
+
+  get isAuthenticated(): boolean {
+    const token = this.getToken();
+    return !!token;
+  }
 }

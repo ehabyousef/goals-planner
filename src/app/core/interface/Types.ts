@@ -11,7 +11,7 @@ export interface IGoal {
   image?: IImage; // Optional image field
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   status: 'ACTIVE' | 'COMPLETED' | 'ARCHIVED';
-  progress_percent: number;
+  progress_percent?: number;
   start_date?: Date;
   end_date?: Date;
   createdAt?: Date;
@@ -27,4 +27,9 @@ export interface IRegister {
   userName: string | null;
   email: string | null;
   password: string | null;
+}
+export interface ICategories {
+  Name: string | null;
+  color: string | null;
+  id: string | null;
 }
