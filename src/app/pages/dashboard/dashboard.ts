@@ -15,8 +15,11 @@ import { RouterLink } from '@angular/router';
 import { Modal } from '../../components/modal/modal';
 import { BrnDialogImports } from '@spartan-ng/brain/dialog';
 import { GoalService } from '../../core/services/goal-service';
-import { IGoal } from '../../core/interface/Types';
+import { IGoal, ITask } from '../../core/interface/Types';
 import { DatePipe, NgClass } from '@angular/common';
+import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { Tasks } from '../../core/services/tasks.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +33,8 @@ import { DatePipe, NgClass } from '@angular/common';
     BrnDialogImports,
     DatePipe,
     NgClass,
+    HlmLabelImports,
+    HlmCheckboxImports,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -44,19 +49,36 @@ import { DatePipe, NgClass } from '@angular/common';
   ],
 })
 export class Dashboard {
-  constructor(private _GoalService: GoalService) {}
+  constructor(
+    private _GoalService: GoalService,
+    private _TasksServices: Tasks,
+  ) {}
   public value = 43;
   goals = signal<IGoal[]>([]);
+  Tasks = signal<ITask[]>([]);
 
   ngOnInit() {
     this.allGoals();
+    this.allTasks();
   }
+
   allGoals(): void {
     this._GoalService.getAllGoals().subscribe({
       next: (res) => {
         if (res) {
           console.log(res.goals);
           this.goals.set(res.goals);
+        }
+      },
+    });
+  }
+
+  allTasks(): void {
+    this._TasksServices.getAllTasks().subscribe({
+      next: (res) => {
+        if (res) {
+          console.log(res.tasks);
+          this.Tasks.set(res.tasks);
         }
       },
     });

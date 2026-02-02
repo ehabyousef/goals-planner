@@ -97,7 +97,45 @@
       </div>
     }
   </div>
-
+  <div class="w-full my-4 p-4 flex justify-between items-center">
+    <h2 class="text-2xl font-bold">Today's Tasks</h2>
+    <p routerLink="/goals" class="text-blue-500 cursor-pointer hover:underline">View All</p>
+  </div>
+  <div class="flex flex-col gap-3 dark:bg-gray-950 bg-slate-200 p-4 rounded-md">
+    @for (item of Tasks(); track $index) {
+      <div
+        class="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-gray-600"
+      >
+        <hlm-checkbox
+          id="toggle-{{ $index }}"
+          [checked]="item.status === 'DONE'"
+          class="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white border-blue-700"
+        />
+        <div class="grid gap-1.5 font-normal w-full">
+          <div class="flex items-center justify-between">
+            <p class="text-sm leading-none font-medium">{{ item.title }}</p>
+            <span
+              class="px-2 py-1 text-xs font-semibold rounded-full"
+              [ngClass]="{
+                'bg-red-100 text-red-700': item.priority === 'HIGH',
+                'bg-yellow-100 text-yellow-700': item.priority === 'MEDIUM',
+                'bg-green-100 text-green-700': item.priority === 'LOW',
+              }"
+            >
+              {{ item.priority }}
+            </span>
+          </div>
+          <p class="text-muted-foreground text-sm line-clamp-2">
+            {{ item.description }}
+          </p>
+          <div class="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Due: {{ item.end_date | date: 'MMM dd, yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+  <!-- tasks  -->
   <app-modal
     #modalComponent
     [title]="'Create New Goal'"

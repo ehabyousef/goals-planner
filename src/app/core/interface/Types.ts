@@ -17,6 +17,20 @@ export interface IGoal {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export interface ITask {
+  user: string;
+  goal_id: string;
+  title: string;
+  description: string;
+  image?: IImage; // Optional image field
+  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
+  progress_percent?: number;
+  start_date?: Date;
+  end_date?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 export interface ILogin {
   email: string | null;

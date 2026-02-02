@@ -10,7 +10,8 @@ import {
 } from '@ng-icons/lucide';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmSidebarImports } from '../../../../libs/ui/sidebar/src';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { Auth } from '../../core/services/auth';
 @Component({
   selector: 'app-side-bar',
   standalone: true,
@@ -37,4 +38,12 @@ export class SideBar {
     { info: 8, name: 'calender', url: '/', icon: 'lucideCalendar' },
     { info: 8, name: 'settings', url: '/', icon: 'lucideSettings' },
   ];
+  constructor(
+    private _Auth: Auth,
+    private _router: Router,
+  ) {}
+  logut() {
+    this._Auth.logout();
+    this._router.navigate(['/login']);
+  }
 }
