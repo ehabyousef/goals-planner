@@ -9,7 +9,7 @@
       variant="outline"
       size="sm"
       (click)="modalComponent.openDialog()"
-      class="newBtn p-6 rounded-xl text-md font-bold flex items-center gap-2 text-white border-none"
+      class="blueClass p-6 rounded-xl text-md font-bold flex items-center gap-2 text-white border-none"
     >
       <ng-icon hlm size="sm" name="lucidePlus" />
       <p>Create New Goal</p>
@@ -104,7 +104,7 @@
   <div class="flex flex-col gap-3 dark:bg-gray-950 bg-slate-200 p-4 rounded-md">
     @for (item of Tasks(); track $index) {
       <div
-        class="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-gray-600"
+        class="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-500 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-gray-600"
       >
         <hlm-checkbox
           id="toggle-{{ $index }}"

@@ -66,6 +66,9 @@
       ],
       "@spartan-ng/helm/select": [
         "./libs/ui/select/src/index.ts"
+      ],
+      "@spartan-ng/helm/pagination": [
+        "./libs/ui/pagination/src/index.ts"
       ]
     }
   },
