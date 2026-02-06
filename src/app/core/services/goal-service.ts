@@ -10,8 +10,8 @@ import { IGoal } from '../interface/Types';
 export class GoalService {
   constructor(private _HttpClient: HttpClient) {}
 
-  getAllGoals(): Observable<any> {
-    return this._HttpClient.get(`${BASE_URL}/goals?page=1&limit=10`);
+  getAllGoals(page: number = 1, limit: number = 6): Observable<any> {
+    return this._HttpClient.get(`${BASE_URL}/goals?page=${page}&limit=${limit}`);
   }
 
   addGoal(data: IGoal): Observable<any> {

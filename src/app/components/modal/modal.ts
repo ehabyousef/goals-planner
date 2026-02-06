@@ -45,7 +45,7 @@ export class Modal {
       Validators.minLength(2),
       Validators.maxLength(500),
     ]),
-    image: new FormControl(null),
+    image: new FormControl(''),
     priority: new FormControl('LOW', [Validators.required]),
     status: new FormControl('ACTIVE', [Validators.required]),
     start_date: new FormControl(''),

@@ -1,6 +1,6 @@
 import { HlmPaginationImports } from './../../../../libs/ui/pagination/src/index';
 import { Component, signal } from '@angular/core';
-import { IGoal } from '../../core/interface/Types';
+import { ICategories, IGoal } from '../../core/interface/Types';
 import { GoalService } from '../../core/services/goal-service';
 import { Modal } from '../../components/modal/modal';
 import { HlmIcon } from '@spartan-ng/helm/icon';
@@ -34,14 +34,71 @@ export class Goals {
   allProducts: IGoal[] = [];
   constructor(private _GoalService: GoalService) {}
   goals = signal<IGoal[]>([]);
+  categories = signal<ICategories[]>([]);
+
+  // Pagination state
+  currentPage = signal<number>(1);
+  totalPages = signal<number>(1);
+  totalGoals = signal<number>(0);
+  limit = 6;
+
   ngOnInit(): void {
     this.AllGoals();
+    this.AllCategories();
   }
 
-  AllGoals() {
-    this._GoalService.getAllGoals().subscribe({
+  AllGoals(page: number = 1) {
+    this._GoalService.getAllGoals(page, this.limit).subscribe({
       next: (res) => {
         this.goals.set(res.goals);
+        this.currentPage.set(res.pagination.currentPage);
+        this.totalPages.set(res.pagination.totalPages);
+        this.totalGoals.set(res.pagination.totalGoals);
+        console.log(res);
+      },
+    });
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.AllGoals(page);
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage() > 1) {
+      this.goToPage(this.currentPage() - 1);
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.goToPage(this.currentPage() + 1);
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const total = this.totalPages();
+    const current = this.currentPage();
+
+    // Show up to 5 page numbers centered around current page
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + 4);
+
+    if (end - start < 4) {
+      start = Math.max(1, end - 4);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+  AllCategories() {
+    this._GoalService.allCategories().subscribe({
+      next: (res) => {
+        this.categories.set(res.categories);
         console.log(res);
       },
     });

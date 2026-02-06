@@ -41,7 +41,11 @@
 
         <div class="grid gap-2">
           <label hlmLabel for="category_id">Category <span class="text-red-500">*</span></label>
-          <brn-select class="inline-block" placeholder="Select a category" formControlName="category_id">
+          <brn-select
+            class="inline-block"
+            placeholder="Select a category"
+            formControlName="category_id"
+          >
             <hlm-select-trigger class="w-full">
               <hlm-select-value />
             </hlm-select-trigger>
@@ -59,7 +63,11 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="grid gap-2">
             <label hlmLabel for="priority">Priority</label>
-            <brn-select class="inline-block" placeholder="Select priority" formControlName="priority">
+            <brn-select
+              class="inline-block"
+              placeholder="Select priority"
+              formControlName="priority"
+            >
               <hlm-select-trigger class="w-full">
                 <hlm-select-value />
               </hlm-select-trigger>
@@ -106,7 +114,7 @@
 
         <div class="grid gap-2">
           <label hlmLabel for="image">Image URL (Optional)</label>
-          <input hlmInput id="picture" type="file" />
+          <input hlmInput id="picture" type="file" formControlName="image" />
           <!-- <input
             hlmInput
             id="image"
