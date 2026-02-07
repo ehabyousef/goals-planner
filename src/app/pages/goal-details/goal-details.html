@@ -13,204 +13,270 @@
   </nav>
 
   <!-- Header Section -->
-  <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm mb-6">
-    <div class="flex items-center justify-between mb-3">
-      <div class="flex items-center gap-3">
-        <span
-          class="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 rounded-full"
-        >
-          {{ goal().status }}
-        </span>
-        <span class="text-sm text-slate-500 dark:text-slate-400"
-          >Due: {{ goal().end_date | date: 'MMM d, yyyy' }}</span
-        >
-      </div>
-      <div class="flex items-center gap-2">
-        <button
-          (click)="openEditModal()"
-          hlmBtn
-          size="sm"
-          class="gap-2 bg-blue-600 hover:bg-blue-700"
-          [disabled]="!goal()"
-        >
-          <ng-icon hlm name="lucidePencil" size="sm" />
-          Edit Goal
-        </button>
-      </div>
-    </div>
-
-    <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-      {{ goal().title || 'Launch New Portfolio' }}
-    </h1>
-    <p class="text-slate-600 dark:text-slate-400 mb-6">
-      {{
-        goal().description ||
-          'Complete 5 professional case studies, refine visual identity, and deploy the finished project to a custom domain with SEO optimization.'
-      }}
-    </p>
-
-    <!-- Progress Section -->
-    <div class="mb-2">
-      <div class="flex items-center justify-between mb-2">
-        <div>
-          <span class="font-semibold text-slate-900 dark:text-white">Overall Progress</span>
+  @if (isLoadingGoal()) {
+    <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm mb-6">
+      <div class="animate-pulse space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-6 w-20 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+            <div class="h-6 w-32 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          </div>
+          <div class="h-10 w-28 bg-gray-300 dark:bg-gray-700 rounded"></div>
         </div>
-        <span class="text-2xl font-bold text-blue-600">{{ goal().progress_percent }}%</span>
-      </div>
-      <div class="w-full bg-gray-200 rounded-full h-2">
-        <div class="bg-blue-500 h-2 rounded-full" [style.width.%]="goal().progress_percent"></div>
+        <div class="h-8 w-3/4 bg-gray-300 dark:bg-gray-700 rounded"></div>
+        <div class="h-4 w-full bg-gray-300 dark:bg-gray-700 rounded"></div>
+        <div class="h-4 w-5/6 bg-gray-300 dark:bg-gray-700 rounded"></div>
+        <div class="flex items-center justify-between">
+          <div class="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div class="h-8 w-16 bg-gray-300 dark:bg-gray-700 rounded"></div>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3"></div>
       </div>
     </div>
-  </div>
+  } @else {
+    <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <span
+            class="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 rounded-full"
+          >
+            {{ goal().status }}
+          </span>
+          <span class="text-sm text-slate-500 dark:text-slate-400"
+            >Due: {{ goal().end_date | date: 'MMM d, yyyy' }}</span
+          >
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            (click)="openEditModal()"
+            hlmBtn
+            size="sm"
+            class="gap-2 bg-blue-600 hover:bg-blue-700"
+            [disabled]="!goal()"
+          >
+            <ng-icon hlm name="lucidePencil" size="sm" />
+            Edit Goal
+          </button>
+        </div>
+      </div>
+
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+        {{ goal().title || 'Launch New Portfolio' }}
+      </h1>
+      <p class="text-slate-600 dark:text-slate-400 mb-6">
+        {{
+          goal().description ||
+            'Complete 5 professional case studies, refine visual identity, and deploy the finished project to a custom domain with SEO optimization.'
+        }}
+      </p>
+
+      <!-- Progress Section -->
+      <div class="mb-2">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <span class="font-semibold text-slate-900 dark:text-white">Overall Progress</span>
+          </div>
+          <span class="text-2xl font-bold text-blue-600">{{ goal().progress_percent }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-500 h-2 rounded-full" [style.width.%]="goal().progress_percent"></div>
+        </div>
+      </div>
+    </div>
+  }
 
   <!-- Milestones & Timeline Section -->
-  <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm">
-    <div class="flex items-center gap-2 mb-6">
-      <ng-icon hlm name="lucideCalendar" size="sm" class="text-blue-600" />
-      <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Tasks & Timeline</h2>
+  @if (isLoadingTasks()) {
+    <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm">
+      <div class="flex items-center gap-2 mb-6">
+        <ng-icon hlm name="lucideCalendar" size="sm" class="text-blue-600" />
+        <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Tasks & Timeline</h2>
+      </div>
+      <div class="flex items-center justify-center py-16">
+        <hlm-spinner class="text-[2rem]" />
+      </div>
     </div>
-
-    <!-- Milestone 1: Design Phase (Completed) -->
-    <div class="relative pl-8 pb-8">
-      <!-- Timeline line -->
-      <div class="absolute left-3 top-6 bottom-0 w-0.5 bg-green-500"></div>
-      <!-- Status icon -->
-      <div
-        class="absolute left-0 top-0 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center"
-      >
-        <ng-icon hlm name="lucideCheck" size="xs" class="text-white" />
+  } @else if (
+    doneTasks().length === 0 && progressTasks().length === 0 && comingTasks().length === 0
+  ) {
+    <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm">
+      <div class="flex items-center gap-2 mb-6">
+        <ng-icon hlm name="lucideCalendar" size="sm" class="text-blue-600" />
+        <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Tasks & Timeline</h2>
+      </div>
+      <div class="flex flex-col items-center justify-center py-16">
+        <div class="text-center space-y-4">
+          <div
+            class="w-24 h-24 mx-auto bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center"
+          >
+            <ng-icon hlm name="lucideCalendar" size="xl" class="text-gray-400 dark:text-gray-500" />
+          </div>
+          <h3 class="text-2xl font-semibold text-gray-700 dark:text-gray-300">No Tasks Yet</h3>
+          <p class="text-gray-500 dark:text-gray-400">
+            Start by adding tasks to track your progress towards this goal
+          </p>
+          <button
+            hlmBtn
+            (click)="openAddTaskModal()"
+            class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-xl text-md font-bold flex items-center gap-2 text-white border-none mx-auto mt-4"
+          >
+            <ng-icon hlm size="sm" name="lucidePlus" />
+            <p>Add Your First Task</p>
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm">
+      <div class="flex items-center gap-2 mb-6">
+        <ng-icon hlm name="lucideCalendar" size="sm" class="text-blue-600" />
+        <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Tasks & Timeline</h2>
       </div>
 
-      <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
-        <p class="text-lg text-green-600 mb-4">Completed {{ doneTasks().length }}</p>
-        <!-- Tasks -->
-        <div class="space-y-3">
-          @for (item of doneTasks(); track $index) {
-            <div class="flex items-center justify-between py-2">
-              <div class="flex items-center gap-3">
-                <hlm-checkbox
-                  [checked]="true"
-                  class="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white dark:data-[state=checked]:text-black border-green-500"
-                />
-                <span class="text-slate-600 dark:text-slate-300 line-through">{{
-                  item.title
-                }}</span>
+      <!-- Milestone 1: Design Phase (Completed) -->
+      <div class="relative pl-8 pb-8">
+        <!-- Timeline line -->
+        <div class="absolute left-3 top-6 bottom-0 w-0.5 bg-green-500"></div>
+        <!-- Status icon -->
+        <div
+          class="absolute left-0 top-0 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center"
+        >
+          <ng-icon hlm name="lucideCheck" size="xs" class="text-white" />
+        </div>
+
+        <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
+          <p class="text-lg text-green-600 mb-4">Completed {{ doneTasks().length }}</p>
+          <!-- Tasks -->
+          <div class="space-y-3">
+            @for (item of doneTasks(); track $index) {
+              <div class="flex items-center justify-between py-2">
+                <div class="flex items-center gap-3">
+                  <hlm-checkbox
+                    [checked]="true"
+                    class="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white dark:data-[state=checked]:text-black border-green-500"
+                  />
+                  <span class="text-slate-600 dark:text-slate-300 line-through">{{
+                    item.title
+                  }}</span>
+                </div>
+                <span
+                  class="text-xs font-medium text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded"
+                  >DONE</span
+                >
               </div>
-              <span
-                class="text-xs font-medium text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded"
-                >DONE</span
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestone 2: Development & Coding (Active) -->
+      <div class="relative pl-8 pb-8">
+        <!-- Timeline line -->
+        <div class="absolute left-3 top-6 bottom-0 w-0.5 bg-slate-300 dark:bg-slate-700"></div>
+        <!-- Status icon -->
+        <div
+          class="absolute left-0 top-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center"
+        >
+          <div class="w-2 h-2 rounded-full bg-white"></div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-lg p-4 border-2 border-blue-500 shadow-md">
+          <p class="text-lg font-semibold text-blue-900 dark:text-blue-500">
+            In Progress {{ progressTasks().length }}
+          </p>
+          <!-- Tasks -->
+          <div class="space-y-3">
+            @for (item of progressTasks(); track $index) {
+              <div
+                class="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700"
               >
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
-    <!-- Milestone 2: Development & Coding (Active) -->
-    <div class="relative pl-8 pb-8">
-      <!-- Timeline line -->
-      <div class="absolute left-3 top-6 bottom-0 w-0.5 bg-slate-300 dark:bg-slate-700"></div>
-      <!-- Status icon -->
-      <div
-        class="absolute left-0 top-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center"
-      >
-        <div class="w-2 h-2 rounded-full bg-white"></div>
-      </div>
-
-      <div class="bg-white dark:bg-slate-800 rounded-lg p-4 border-2 border-blue-500 shadow-md">
-        <p class="text-lg font-semibold text-blue-900 dark:text-blue-500">
-          In Progress {{ progressTasks().length }}
-        </p>
-        <!-- Tasks -->
-        <div class="space-y-3">
-          @for (item of progressTasks(); track $index) {
-            <div
-              class="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700"
-            >
-              <span class="text-slate-900 dark:text-white">{{ item.title }}</span>
-              <div class="flex items-center gap-2">
-                <span class="flex items-center gap-1 text-xs text-slate-500">
-                  <ng-icon hlm name="lucideCalendar" size="xs" />
-                  {{ item.end_date | date: 'MMM d, yyyy' }}
-                </span>
-                <span
-                  class="text-xs font-medium text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded"
-                  >{{ item.priority }}</span
-                >
-                <button
-                  (click)="openEditTaskModal(item)"
-                  hlmBtn
-                  variant="ghost"
-                  size="icon"
-                  class="h-8 w-8"
-                >
-                  <ng-icon hlm name="lucidePencil" size="sm" class="text-slate-500" />
-                </button>
+                <span class="text-slate-900 dark:text-white">{{ item.title }}</span>
+                <div class="flex items-center gap-2">
+                  <span class="flex items-center gap-1 text-xs text-slate-500">
+                    <ng-icon hlm name="lucideCalendar" size="xs" />
+                    {{ item.end_date | date: 'MMM d, yyyy' }}
+                  </span>
+                  <span
+                    class="text-xs font-medium text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded"
+                    >{{ item.priority }}</span
+                  >
+                  <button
+                    (click)="openEditTaskModal(item)"
+                    hlmBtn
+                    variant="ghost"
+                    size="icon"
+                    class="h-8 w-8"
+                  >
+                    <ng-icon hlm name="lucidePencil" size="sm" class="text-slate-500" />
+                  </button>
+                </div>
               </div>
-            </div>
-          }
+            }
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Milestone 3: Final Deployment (Upcoming/Locked) -->
-    <div class="relative pl-8">
-      <!-- Status icon -->
-      <div
-        class="absolute left-0 top-0 w-6 h-6 rounded-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center"
-      >
-        <ng-icon hlm name="lucideLock" size="xs" class="text-slate-500 dark:text-slate-400" />
-      </div>
+      <!-- Milestone 3: Final Deployment (Upcoming/Locked) -->
+      <div class="relative pl-8">
+        <!-- Status icon -->
+        <div
+          class="absolute left-0 top-0 w-6 h-6 rounded-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center"
+        >
+          <ng-icon hlm name="lucideLock" size="xs" class="text-slate-500 dark:text-slate-400" />
+        </div>
 
-      <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 opacity-75">
-        <h3 class="font-semibold text-slate-900 dark:text-white">TODO</h3>
-        <!-- Locked message -->
-        <div class="space-y-3">
-          @for (item of comingTasks(); track $index) {
-            <div
-              class="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700"
-            >
-              <span class="text-slate-900 dark:text-white">{{ item.title }}</span>
-              <div class="flex items-center gap-2">
-                <span class="flex items-center gap-1 text-xs text-slate-500">
-                  <ng-icon hlm name="lucideCalendar" size="xs" />
-                  {{ item.end_date | date: 'MMM d, yyyy' }}
-                </span>
-                <span
-                  class="text-xs font-medium text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded"
-                  >{{ item.priority }}</span
-                >
-                <button
-                  (click)="openEditTaskModal(item)"
-                  hlmBtn
-                  variant="ghost"
-                  size="icon"
-                  class="h-8 w-8"
-                >
-                  <ng-icon hlm name="lucidePencil" size="sm" class="text-slate-500" />
-                </button>
+        <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 opacity-75">
+          <h3 class="font-semibold text-slate-900 dark:text-white">TODO</h3>
+          <!-- Locked message -->
+          <div class="space-y-3">
+            @for (item of comingTasks(); track $index) {
+              <div
+                class="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-700"
+              >
+                <span class="text-slate-900 dark:text-white">{{ item.title }}</span>
+                <div class="flex items-center gap-2">
+                  <span class="flex items-center gap-1 text-xs text-slate-500">
+                    <ng-icon hlm name="lucideCalendar" size="xs" />
+                    {{ item.end_date | date: 'MMM d, yyyy' }}
+                  </span>
+                  <span
+                    class="text-xs font-medium text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded"
+                    >{{ item.priority }}</span
+                  >
+                  <button
+                    (click)="openEditTaskModal(item)"
+                    hlmBtn
+                    variant="ghost"
+                    size="icon"
+                    class="h-8 w-8"
+                  >
+                    <ng-icon hlm name="lucidePencil" size="sm" class="text-slate-500" />
+                  </button>
+                </div>
               </div>
-            </div>
-          }
+            }
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 
   <!-- Floating Action Button -->
-  <button
-    hlmTooltipTrigger
-    [hlmTooltipTrigger]="addTaskTooltip"
-    hlmBtn
-    (click)="openAddTaskModal()"
-    class="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg flex items-center justify-center"
-  >
-    <ng-icon hlm name="lucidePlus" class="text-white" />
-  </button>
+  @if (!isLoadingGoal()) {
+    <button
+      hlmTooltipTrigger
+      [hlmTooltipTrigger]="addTaskTooltip"
+      hlmBtn
+      (click)="openAddTaskModal()"
+      class="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg flex items-center justify-center"
+    >
+      <ng-icon hlm name="lucidePlus" class="text-white" />
+    </button>
 
-  <ng-template #addTaskTooltip>Add New Task</ng-template>
+    <ng-template #addTaskTooltip>Add New Task</ng-template>
+  }
 
-  @if (goal()) {
+  @if (goal()._id) {
     <app-edit-goal-modal #editModal [goalData]="goal()" (goalUpdated)="onGoalUpdated($event)" />
     <app-task-modal
       #addTask

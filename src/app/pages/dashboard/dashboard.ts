@@ -1,6 +1,7 @@
 import { HlmProgressImports } from './../../../../libs/ui/progress/src/index';
 import { HlmCardImports } from './../../../../libs/ui/card/src/index';
-import { Component, signal } from '@angular/core';
+import { HlmSpinnerImports } from './../../../../libs/ui/spinner/src/index';
+import { Component, signal, viewChild } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideFlag,
@@ -28,6 +29,7 @@ import { Tasks } from '../../core/services/tasks.service';
     NgIcon,
     HlmProgressImports,
     HlmButtonImports,
+    HlmSpinnerImports,
     RouterLink,
     Modal,
     BrnDialogImports,
@@ -55,7 +57,11 @@ export class Dashboard {
   ) {}
   public value = 43;
   goals = signal<IGoal[]>([]);
+  AllTasks = signal<ITask[]>([]);
   Tasks = signal<ITask[]>([]);
+  isLoadingGoals = signal<boolean>(true);
+  isLoadingTasks = signal<boolean>(true);
+  modalComponent = viewChild<Modal>('modalComponent');
 
   ngOnInit() {
     this.allGoals();
@@ -63,23 +69,49 @@ export class Dashboard {
   }
 
   allGoals(): void {
+    this.isLoadingGoals.set(true);
     this._GoalService.getAllGoals().subscribe({
       next: (res) => {
         if (res) {
           console.log(res.goals);
           this.goals.set(res.goals);
         }
+        this.isLoadingGoals.set(false);
+      },
+      error: (err) => {
+        this.isLoadingGoals.set(false);
+        console.error(err);
       },
     });
   }
 
   allTasks(): void {
+    this.isLoadingTasks.set(true);
     this._TasksServices.getAllTasks().subscribe({
       next: (res) => {
         if (res) {
           console.log(res.tasks);
-          this.Tasks.set(res.tasks);
+          this.Tasks.set(res.tasks.filter((task: ITask) => task.status === 'IN_PROGRESS'));
+          this.AllTasks.set(res.tasks);
         }
+        this.isLoadingTasks.set(false);
+      },
+      error: (err) => {
+        this.isLoadingTasks.set(false);
+        console.error(err);
+      },
+    });
+  }
+
+  updateTask(id: string): void {
+    this._TasksServices.updateTask(id, { status: 'DONE' }).subscribe({
+      next: (res) => {
+        console.log('Task updated successfully:', res);
+        this.allTasks();
+        // this.allGoals();
+      },
+      error: (error) => {
+        console.error('Error updating task:', error);
       },
     });
   }

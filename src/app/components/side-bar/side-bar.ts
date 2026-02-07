@@ -32,11 +32,11 @@ import { Auth } from '../../core/services/auth';
 })
 export class SideBar {
   protected readonly _projects = [
-    { info: 24, name: 'Dashboard', url: '/', icon: 'lucideLayoutDashboard' },
-    { info: 3, name: 'Goals', url: '/goals', icon: 'lucideGoal' },
-    { info: 21, name: 'Tasks', url: '/tasks', icon: 'lucideCheckCheck' },
-    { info: 8, name: 'calender', url: '/', icon: 'lucideCalendar' },
-    { info: 8, name: 'settings', url: '/', icon: 'lucideSettings' },
+    { name: 'Dashboard', url: '/', icon: 'lucideLayoutDashboard' },
+    { name: 'Goals', url: '/goals', icon: 'lucideGoal' },
+    // {  name: 'Tasks', url: '/tasks', icon: 'lucideCheckCheck' },
+    { name: 'calender', url: '/', icon: 'lucideCalendar' },
+    { name: 'settings', url: '/', icon: 'lucideSettings' },
   ];
   constructor(
     private _Auth: Auth,

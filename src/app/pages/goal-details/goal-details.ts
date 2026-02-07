@@ -2,6 +2,7 @@ import { IGoal, ITask } from '../../core/interface/Types';
 import { GoalService } from '../../core/services/goal-service';
 import { HlmBreadCrumbImports } from './../../../../libs/ui/breadcrumb/src/index';
 import { HlmTooltipImports } from './../../../../libs/ui/tooltip/src/index';
+import { HlmSpinnerImports } from './../../../../libs/ui/spinner/src/index';
 import { Component, signal, viewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -37,6 +38,7 @@ import { TaskModal } from '../../components/task-modal/task-modal';
     HlmCardImports,
     HlmSeparatorImports,
     HlmTooltipImports,
+    HlmSpinnerImports,
     EditGoalModal,
     DatePipe,
     TaskModal,
@@ -66,6 +68,8 @@ export class GoalDetails {
   progressTasks = signal<ITask[]>([]);
   comingTasks = signal<ITask[]>([]);
   selectedTask = signal<ITask | undefined>(undefined);
+  isLoadingGoal = signal<boolean>(true);
+  isLoadingTasks = signal<boolean>(true);
   editModal = viewChild<EditGoalModal>('editModal');
   addTask = viewChild<TaskModal>('addTask');
   editTaskModal = viewChild<TaskModal>('editTaskModal');
@@ -104,15 +108,22 @@ export class GoalDetails {
   }
 
   Goal(id: string) {
+    this.isLoadingGoal.set(true);
     this._GoalService.singleGoal(id).subscribe({
       next: (res) => {
         this.goal.set(res.goal);
+        this.isLoadingGoal.set(false);
         this.goalTasks();
+      },
+      error: (err) => {
+        this.isLoadingGoal.set(false);
+        console.error(err);
       },
     });
   }
 
   goalTasks(): void {
+    this.isLoadingTasks.set(true);
     this._TasksServices.getGoalTasks(this.goal()._id).subscribe({
       next: (res) => {
         if (res) {
@@ -121,6 +132,11 @@ export class GoalDetails {
           this.doneTasks.set(res.tasks.filter((task: ITask) => task.status === 'DONE'));
           this.comingTasks.set(res.tasks.filter((task: ITask) => task.status === 'TODO'));
         }
+        this.isLoadingTasks.set(false);
+      },
+      error: (err) => {
+        this.isLoadingTasks.set(false);
+        console.error(err);
       },
     });
   }

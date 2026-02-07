@@ -1,5 +1,6 @@
+import { HlmSpinnerImports } from './../../../../libs/ui/spinner/src/index';
 import { HlmPaginationImports } from './../../../../libs/ui/pagination/src/index';
-import { Component, signal } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import { ICategories, IGoal } from '../../core/interface/Types';
 import { GoalService } from '../../core/services/goal-service';
 import { Modal } from '../../components/modal/modal';
@@ -8,6 +9,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { BrnSelectImports } from '@spartan-ng/brain/select';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { DatePipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 @Component({
@@ -21,6 +23,8 @@ import { RouterLink } from '@angular/router';
     HlmPaginationImports,
     BrnSelectImports,
     HlmSelectImports,
+    HlmButtonImports,
+    HlmSpinnerImports,
     NgClass,
     RouterLink,
   ],
@@ -37,6 +41,8 @@ export class Goals {
   constructor(private _GoalService: GoalService) {}
   goals = signal<IGoal[]>([]);
   categories = signal<ICategories[]>([]);
+  isLoading = signal<boolean>(true);
+  modalComponent = viewChild<Modal>('modalComponent');
 
   // Pagination state
   currentPage = signal<number>(1);
@@ -50,13 +56,19 @@ export class Goals {
   }
 
   AllGoals(page: number = 1) {
+    this.isLoading.set(true);
     this._GoalService.getAllGoals(page, this.limit).subscribe({
       next: (res) => {
         this.goals.set(res.goals);
         this.currentPage.set(res.pagination.currentPage);
         this.totalPages.set(res.pagination.totalPages);
         this.totalGoals.set(res.pagination.totalGoals);
+        this.isLoading.set(false);
         console.log(res);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        console.error(err);
       },
     });
   }
@@ -104,5 +116,9 @@ export class Goals {
         console.log(res);
       },
     });
+  }
+
+  onGoalCreated() {
+    this.AllGoals(this.currentPage());
   }
 }

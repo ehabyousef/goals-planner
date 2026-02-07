@@ -1,4 +1,4 @@
-<div>
+<div class="min-h-[88vh]">
   <div class="flex w-full justify-between items-center mb-4">
     <div class="flex flex-col gap-1">
       <h1 class="text-3xl">My Goals</h1>
@@ -63,98 +63,134 @@
     <p>sorted by : Recent</p>
   </div>
   <!-- cards section  -->
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-8">
-    @for (item of goals(); track $index) {
-      <div class="rounded-xl shadow-xl overflow-hidden">
+  @if (isLoading()) {
+    <div class="flex items-center justify-center h-full w-full">
+      <hlm-spinner class="text-[2rem]" />
+    </div>
+  } @else if (goals().length === 0) {
+    <div class="flex flex-col items-center justify-center py-16">
+      <div class="text-center space-y-4">
         <div
-          class="h-60 flex items-center justify-center relative cursor-pointer"
-          [routerLink]="'/goals/' + item._id"
+          class="w-24 h-24 mx-auto bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center"
         >
-          <img
-            [src]="item.image?.url"
-            alt="{{ item.title }}"
-            class="w-full h-full object-cover rounded-sm"
-          />
-          <div class="absolute top-2 right-2 flex gap-2">
-            <span
-              class="px-2 py-1 text-xs font-semibold rounded-full"
-              [ngClass]="{
-                'bg-red-100 text-red-700': item.priority === 'HIGH',
-                'bg-yellow-100 text-yellow-700': item.priority === 'MEDIUM',
-                'bg-green-100 text-green-700': item.priority === 'LOW',
-              }"
-            >
-              {{ item.priority }}
-            </span>
-            <span
-              class="px-2 py-1 text-xs font-semibold rounded-full"
-              [ngClass]="{
-                'bg-blue-100 text-blue-700': item.status === 'ACTIVE',
-                'bg-green-100 text-green-700': item.status === 'COMPLETED',
-                'bg-gray-100 text-gray-700': item.status === 'ARCHIVED',
-              }"
-            >
-              {{ item.status }}
-            </span>
-          </div>
+          <ng-icon hlm name="lucidePlus" size="xl" class="text-gray-400 dark:text-gray-500" />
         </div>
-        <div class="p-4">
-          <h3 class="text-lg font-bold">{{ item.title }}</h3>
-          <p class="text-sm text-gray-600 line-clamp-2 my-2">
-            {{ item.description }}
-          </p>
-          <div class="flex justify-between items-center my-2">
-            <p class="text-sm text-gray-600">{{ item.progress_percent }}% Completed</p>
-            <p class="text-sm text-blue-500 font-medium">{{ item.end_date | date: 'MMM yyyy' }}</p>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div class="bg-blue-500 h-2 rounded-full" [style.width.%]="item.progress_percent"></div>
-          </div>
-        </div>
+        <h3 class="text-2xl font-semibold text-gray-700 dark:text-gray-300">No Goals Found</h3>
+        <p class="text-gray-500 dark:text-gray-400">
+          Start by creating your first goal to track your progress
+        </p>
+        <button
+          hlmBtn
+          (click)="modalComponent.openDialog()"
+          class="blueClass px-6 py-2 rounded-xl text-md font-bold flex items-center gap-2 text-white border-none mx-auto mt-4"
+        >
+          <ng-icon hlm size="sm" name="lucidePlus" />
+          <p>Create Your First Goal</p>
+        </button>
       </div>
-    }
-  </div>
-  <div class="w-full items-end my-6">
-    <nav hlmPagination class="justify-end">
-      <ul hlmPaginationContent>
-        <li hlmPaginationItem class="me-6">
-          <button
-            hlmPaginationLink
-            (click)="previousPage()"
-            [attr.disabled]="currentPage() === 1 ? true : null"
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-8">
+      @for (item of goals(); track $index) {
+        <div class="rounded-xl shadow-xl overflow-hidden">
+          <div
+            class="h-60 flex items-center justify-center relative cursor-pointer"
+            [routerLink]="'/goals/' + item._id"
           >
-            <hlm-pagination-previous />
-          </button>
-        </li>
-        @for (page of getPageNumbers(); track page) {
-          <li hlmPaginationItem class="">
-            <a hlmPaginationLink (click)="goToPage(page)" [isActive]="page === currentPage()">{{
-              page
-            }}</a>
+            <img
+              [src]="item.image?.url"
+              alt="{{ item.title }}"
+              class="w-full h-full object-cover rounded-sm"
+            />
+            <div class="absolute top-2 right-2 flex gap-2">
+              <span
+                class="px-2 py-1 text-xs font-semibold rounded-full"
+                [ngClass]="{
+                  'bg-red-100 text-red-700': item.priority === 'HIGH',
+                  'bg-yellow-100 text-yellow-700': item.priority === 'MEDIUM',
+                  'bg-green-100 text-green-700': item.priority === 'LOW',
+                }"
+              >
+                {{ item.priority }}
+              </span>
+              <span
+                class="px-2 py-1 text-xs font-semibold rounded-full"
+                [ngClass]="{
+                  'bg-blue-100 text-blue-700': item.status === 'ACTIVE',
+                  'bg-green-100 text-green-700': item.status === 'COMPLETED',
+                  'bg-gray-100 text-gray-700': item.status === 'ARCHIVED',
+                }"
+              >
+                {{ item.status }}
+              </span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg font-bold">{{ item.title }}</h3>
+            <p class="text-sm text-gray-600 line-clamp-2 my-2">
+              {{ item.description }}
+            </p>
+            <div class="flex justify-between items-center my-2">
+              <p class="text-sm text-gray-600">{{ item.progress_percent }}% Completed</p>
+              <p class="text-sm text-blue-500 font-medium">
+                {{ item.end_date | date: 'MMM yyyy' }}
+              </p>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div
+                class="bg-blue-500 h-2 rounded-full"
+                [style.width.%]="item.progress_percent"
+              ></div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+  @if (!isLoading() && goals().length > 0) {
+    <div class="w-full items-end my-6">
+      <nav hlmPagination class="justify-end">
+        <ul hlmPaginationContent>
+          <li hlmPaginationItem class="me-6">
+            <button
+              hlmPaginationLink
+              (click)="previousPage()"
+              [attr.disabled]="currentPage() === 1 ? true : null"
+            >
+              <hlm-pagination-previous />
+            </button>
           </li>
-        }
-        <!-- show the ellipsis if there are more than 5 pages and the current page before end fom 2 -->
-        @if (totalPages() > 5 && currentPage() < totalPages() - 2) {
-          <li hlmPaginationItem>
-            <hlm-pagination-ellipsis />
+          @for (page of getPageNumbers(); track page) {
+            <li hlmPaginationItem class="">
+              <a hlmPaginationLink (click)="goToPage(page)" [isActive]="page === currentPage()">{{
+                page
+              }}</a>
+            </li>
+          }
+          <!-- show the ellipsis if there are more than 5 pages and the current page before end fom 2 -->
+          @if (totalPages() > 5 && currentPage() < totalPages() - 2) {
+            <li hlmPaginationItem>
+              <hlm-pagination-ellipsis />
+            </li>
+          }
+          <li hlmPaginationItem class="ms-6">
+            <button
+              hlmPaginationLink
+              (click)="nextPage()"
+              [attr.disabled]="currentPage() === totalPages() ? true : null"
+            >
+              <hlm-pagination-next />
+            </button>
           </li>
-        }
-        <li hlmPaginationItem class="ms-6">
-          <button
-            hlmPaginationLink
-            (click)="nextPage()"
-            [attr.disabled]="currentPage() === totalPages() ? true : null"
-          >
-            <hlm-pagination-next />
-          </button>
-        </li>
-      </ul>
-    </nav>
-  </div>
+        </ul>
+      </nav>
+    </div>
+  }
   <!-- modal component  -->
   <app-modal
     #modalComponent
     [title]="'Create New Goal'"
     [description]="'Fill in the details to create a new goal. Click save when you are done.'"
+    (goalCreated)="onGoalCreated()"
   />
 </div>
