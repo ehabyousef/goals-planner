@@ -4,8 +4,8 @@
     *brnDialogContent="let ctx"
   >
     <hlm-dialog-header>
-      <h3 hlmDialogTitle class="text-xl font-semibold">{{ title() }}</h3>
-      <p hlmDialogDescription class="text-sm">{{ description() }}</p>
+      <h3 hlmDialogTitle class="text-xl font-semibold">{{ title }}</h3>
+      <p hlmDialogDescription class="text-sm">{{ description }}</p>
     </hlm-dialog-header>
 
     <form [formGroup]="formData" (ngSubmit)="onSubmit()">
@@ -16,7 +16,7 @@
             hlmInput
             id="title"
             formControlName="title"
-            placeholder="Enter goal title (2-100 characters)"
+            placeholder="Enter task title (2-100 characters)"
             class="w-full"
           />
           @if (formData.get('title')?.invalid && formData.get('title')?.touched) {
@@ -30,33 +30,12 @@
             hlmInput
             id="description"
             formControlName="description"
-            placeholder="Enter goal description (2-500 characters)"
+            placeholder="Enter task description (2-500 characters)"
             class="w-full min-h-[100px]"
             rows="4"
           ></textarea>
           @if (formData.get('description')?.invalid && formData.get('description')?.touched) {
             <span class="text-xs text-red-500">Description is required (2-500 characters)</span>
-          }
-        </div>
-
-        <div class="grid gap-2">
-          <label hlmLabel for="category_id">Category <span class="text-red-500">*</span></label>
-          <brn-select
-            class="inline-block"
-            placeholder="Select a category"
-            formControlName="category_id"
-          >
-            <hlm-select-trigger class="w-full">
-              <hlm-select-value />
-            </hlm-select-trigger>
-            <hlm-select-content class="dark:bg-gray-950 bg-slate-200">
-              @for (item of categories(); track $index) {
-                <hlm-option [value]="item.id">{{ item?.Name }}</hlm-option>
-              }
-            </hlm-select-content>
-          </brn-select>
-          @if (formData.get('category_id')?.invalid && formData.get('category_id')?.touched) {
-            <span class="text-xs text-red-500">Category is required</span>
           }
         </div>
 
@@ -86,27 +65,29 @@
                 <hlm-select-value />
               </hlm-select-trigger>
               <hlm-select-content class="dark:bg-gray-950 bg-slate-200">
-                <hlm-option value="ACTIVE">ACTIVE</hlm-option>
-                <hlm-option value="COMPLETED">COMPLETED</hlm-option>
-                <hlm-option value="ARCHIVED">ARCHIVED</hlm-option>
+                <hlm-option value="TODO">TODO</hlm-option>
+                <hlm-option value="IN_PROGRESS">IN_PROGRESS</hlm-option>
+                <hlm-option value="DONE">DONE</hlm-option>
               </hlm-select-content>
             </brn-select>
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-          <div class="grid gap-2">
-            <label hlmLabel for="start_date">Start Date</label>
-            <input
-              hlmInput
-              id="start_date"
-              type="date"
-              formControlName="start_date"
-              class="block w-full"
-            />
-          </div>
+          @if (!isUpdateMode()) {
+            <div class="grid gap-2">
+              <label hlmLabel for="start_date">Start Date</label>
+              <input
+                hlmInput
+                id="start_date"
+                type="date"
+                formControlName="start_date"
+                class="block w-full"
+              />
+            </div>
+          }
 
-          <div class="grid gap-2">
+          <div class="grid gap-2" [class.col-span-2]="isUpdateMode()">
             <label hlmLabel for="end_date">End Date</label>
             <input
               hlmInput
@@ -116,18 +97,6 @@
               class="block w-full"
             />
           </div>
-        </div>
-
-        <div class="grid gap-2">
-          <label hlmLabel for="image">Image (Optional)</label>
-          <input
-            hlmInput
-            id="picture"
-            type="file"
-            (change)="onFileSelected($event)"
-            [disabled]="isSubmitting()"
-            accept="image/*"
-          />
         </div>
       </div>
 
@@ -148,7 +117,15 @@
           [disabled]="formData.invalid || isSubmitting()"
           class="flex-1 ring-1 ring-black dark:ring-white bg-green-700 text-white hover:bg-green-800 hover:text-white"
         >
-          {{ isSubmitting() ? 'Creating...' : 'Create' }}
+          {{
+            isSubmitting()
+              ? isUpdateMode()
+                ? 'Updating...'
+                : 'Creating...'
+              : isUpdateMode()
+                ? 'Update'
+                : 'Create'
+          }}
         </button>
       </hlm-dialog-footer>
     </form>

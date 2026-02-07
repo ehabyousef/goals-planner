@@ -16,9 +16,10 @@ export interface IGoal {
   end_date?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+  _id:string
 }
 export interface ITask {
-  user: string;
+  user?: string;
   goal_id: string;
   title: string;
   description: string;
@@ -30,6 +31,7 @@ export interface ITask {
   end_date?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+  _id?: string;
 }
 
 export interface ILogin {

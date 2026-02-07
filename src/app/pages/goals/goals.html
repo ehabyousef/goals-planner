@@ -66,7 +66,10 @@
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-8">
     @for (item of goals(); track $index) {
       <div class="rounded-xl shadow-xl overflow-hidden">
-        <div class="h-60 flex items-center justify-center relative">
+        <div
+          class="h-60 flex items-center justify-center relative cursor-pointer"
+          [routerLink]="'/goals/' + item._id"
+        >
           <img
             [src]="item.image?.url"
             alt="{{ item.title }}"
@@ -114,7 +117,7 @@
   <div class="w-full items-end my-6">
     <nav hlmPagination class="justify-end">
       <ul hlmPaginationContent>
-        <li hlmPaginationItem>
+        <li hlmPaginationItem class="me-6">
           <button
             hlmPaginationLink
             (click)="previousPage()"
@@ -124,7 +127,7 @@
           </button>
         </li>
         @for (page of getPageNumbers(); track page) {
-          <li hlmPaginationItem>
+          <li hlmPaginationItem class="">
             <a hlmPaginationLink (click)="goToPage(page)" [isActive]="page === currentPage()">{{
               page
             }}</a>
@@ -136,7 +139,7 @@
             <hlm-pagination-ellipsis />
           </li>
         }
-        <li hlmPaginationItem>
+        <li hlmPaginationItem class="ms-6">
           <button
             hlmPaginationLink
             (click)="nextPage()"

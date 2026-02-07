@@ -9,6 +9,7 @@ import { lucidePlus } from '@ng-icons/lucide';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { BrnSelectImports } from '@spartan-ng/brain/select';
 import { DatePipe, NgClass } from '@angular/common';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-goals',
   imports: [
@@ -21,6 +22,7 @@ import { DatePipe, NgClass } from '@angular/common';
     BrnSelectImports,
     HlmSelectImports,
     NgClass,
+    RouterLink,
   ],
   templateUrl: './goals.html',
   styleUrl: './goals.scss',

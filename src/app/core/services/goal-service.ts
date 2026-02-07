@@ -13,10 +13,18 @@ export class GoalService {
   getAllGoals(page: number = 1, limit: number = 6): Observable<any> {
     return this._HttpClient.get(`${BASE_URL}/goals?page=${page}&limit=${limit}`);
   }
+  singleGoal(id: string): Observable<any> {
+    return this._HttpClient.get(`${BASE_URL}/goals/${id}`);
+  }
 
-  addGoal(data: IGoal): Observable<any> {
+  addGoal(data: FormData | IGoal): Observable<any> {
     return this._HttpClient.post(`${BASE_URL}/goals/addGoal`, data);
   }
+
+  updateGoal(id: string | undefined, data: FormData): Observable<any> {
+    return this._HttpClient.put(`${BASE_URL}/goals/updateGoal/${id}`, data);
+  }
+
   allCategories(): Observable<any> {
     return this._HttpClient.get(`${BASE_URL}/categories`);
   }

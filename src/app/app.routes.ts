@@ -21,6 +21,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/goals/goals').then((c) => c.Goals),
       },
       {
+        path: 'goals/:id',
+        loadComponent: () => import('./pages/goal-details/goal-details').then((c) => c.GoalDetails),
+      },
+      {
         path: 'tasks',
         loadComponent: () => import('./pages/tasks/tasks').then((c) => c.Tasks),
       },
