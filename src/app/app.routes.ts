@@ -29,6 +29,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/tasks/tasks').then((c) => c.Tasks),
       },
       {
+        path: 'calendar',
+        loadComponent: () => import('./pages/calendar/calendar.component').then((c) => c.CalendarComponent),
+      },
+      {
         path: 'settings',
         loadComponent: () => import('./pages/settings/settings').then((c) => c.Settings),
       },

@@ -1,0 +1,11 @@
+/* Calendar component – minimal custom styles (Tailwind handles the rest) */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Smooth transition on badge hover */
+button.truncate:hover {
+  filter: brightness(1.15);
+}

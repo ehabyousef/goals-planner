@@ -1,0 +1,143 @@
+<!-- Calendar Container -->
+<div class="min-h-[89vh] bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-7 shadow-xl">
+  <!-- ─── Header: Month title + navigation ─── -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+      {{ monthTitle() }}
+    </h2>
+
+    <div class="flex items-center gap-2">
+      <!-- Previous month -->
+      <button
+        (click)="previousMonth()"
+        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700
+               text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white
+               border border-gray-300 dark:border-gray-700 transition-all duration-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+
+      <!-- Today -->
+      <button
+        (click)="goToToday()"
+        class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700
+               text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white
+               border border-gray-300 dark:border-gray-700 text-sm font-medium transition-all duration-200"
+      >
+        Today
+      </button>
+
+      <!-- Next month -->
+      <button
+        (click)="nextMonth()"
+        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700
+               text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white
+               border border-gray-300 dark:border-gray-700 transition-all duration-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── Weekday headers ─── -->
+  <div class="grid grid-cols-7 mb-2">
+    @for (day of weekDays; track day) {
+      <div class="text-center text-sm font-semibold text-gray-600 dark:text-gray-400 py-2">
+        {{ day }}
+      </div>
+    }
+  </div>
+
+  <!-- ─── Calendar grid (42 cells = 6 rows × 7 cols) ─── -->
+  @if (loading()) {
+    <div class="flex items-center justify-center h-96">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+    </div>
+  } @else {
+    <div class="grid grid-cols-7 gap-px bg-gray-300 dark:bg-gray-800 rounded-lg overflow-hidden">
+      @for (day of calendarDays(); track day.date.toISOString()) {
+        <div
+          class="min-h-[120px] p-2 transition-colors duration-200"
+          [class]="day.isCurrentMonth
+            ? 'bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/80'
+            : 'bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800/60'"
+        >
+          <!-- Day number -->
+          <div class="flex items-center justify-between mb-1">
+            <span
+              class="text-sm font-medium inline-flex items-center justify-center w-7 h-7 rounded-full"
+              [ngClass]="{
+                'ring-2 ring-blue-500 text-blue-500 dark:text-blue-400': day.isToday,
+                'text-gray-900 dark:text-white': day.isCurrentMonth && !day.isToday,
+                'text-gray-400 dark:text-gray-600': !day.isCurrentMonth
+              }"
+            >
+              {{ day.date | date: 'd' }}
+            </span>
+          </div>
+
+          <!-- Event badges (max 2 visible) -->
+          <div class="space-y-1">
+            @for (item of getVisibleItems(day); track item.id) {
+              <button
+                (click)="navigateToGoal(item)"
+                class="w-full text-left px-1.5 py-0.5 rounded text-xs border truncate cursor-pointer hover:opacity-80 transition-opacity duration-150"
+                [ngClass]="getBadgeClasses(item)"
+                [title]="item.title"
+              >
+                {{ getBadgeIcon(item) }} {{ item.title }}
+              </button>
+            }
+
+            <!-- Overflow indicator -->
+            @if (getOverflowCount(day) > 0) {
+              <div class="text-xs text-gray-500 dark:text-gray-500 pl-1">+{{ getOverflowCount(day) }} more</div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ─── Legend ─── -->
+  <div class="flex items-center gap-6 mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 rounded-sm bg-purple-500/30 border border-purple-500/50"></span>
+      <span class="text-xs text-gray-600 dark:text-gray-400">Goal Deadline</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 rounded-sm bg-blue-500/30 border border-blue-500/50"></span>
+      <span class="text-xs text-gray-600 dark:text-gray-400">Task Due</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 rounded-sm bg-emerald-500/30 border border-emerald-500/50"></span>
+      <span class="text-xs text-gray-600 dark:text-gray-400">Completed Task</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 rounded-full ring-2 ring-blue-500"></span>
+      <span class="text-xs text-gray-600 dark:text-gray-400">Today</span>
+    </div>
+  </div>
+</div>

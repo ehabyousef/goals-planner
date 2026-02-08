@@ -35,8 +35,8 @@ export class SideBar {
     { name: 'Dashboard', url: '/', icon: 'lucideLayoutDashboard' },
     { name: 'Goals', url: '/goals', icon: 'lucideGoal' },
     // {  name: 'Tasks', url: '/tasks', icon: 'lucideCheckCheck' },
-    { name: 'calender', url: '/', icon: 'lucideCalendar' },
-    { name: 'settings', url: '/', icon: 'lucideSettings' },
+    { name: 'Calendar', url: '/calendar', icon: 'lucideCalendar' },
+    { name: 'Settings', url: '/settings', icon: 'lucideSettings' },
   ];
   constructor(
     private _Auth: Auth,
