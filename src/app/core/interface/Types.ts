@@ -16,7 +16,7 @@ export interface IGoal {
   end_date?: Date;
   createdAt?: Date;
   updatedAt?: Date;
-  _id:string
+  _id: string;
 }
 export interface ITask {
   user?: string;
@@ -47,5 +47,5 @@ export interface IRegister {
 export interface ICategories {
   Name: string | null;
   color: string | null;
-  id: string | null;
+  id?: string;
 }
