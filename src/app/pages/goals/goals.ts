@@ -25,7 +25,6 @@ import { RouterLink } from '@angular/router';
     HlmSelectImports,
     HlmButtonImports,
     HlmSpinnerImports,
-    NgClass,
     RouterLink,
   ],
   templateUrl: './goals.html',

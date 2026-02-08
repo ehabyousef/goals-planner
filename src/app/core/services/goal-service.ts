@@ -24,7 +24,9 @@ export class GoalService {
   updateGoal(id: string | undefined, data: FormData): Observable<any> {
     return this._HttpClient.put(`${BASE_URL}/goals/updateGoal/${id}`, data);
   }
-
+  deleteGoal(GoalId: string | undefined) {
+    return this._HttpClient.delete(`${BASE_URL}/goals/deleteGoal/${GoalId}`);
+  }
   allCategories(): Observable<any> {
     return this._HttpClient.get(`${BASE_URL}/categories`);
   }
@@ -33,8 +35,6 @@ export class GoalService {
     return this._HttpClient.post(`${BASE_URL}/categories/addCategory`, data);
   }
   deleteCategory(categoryId: string | undefined) {
-    return this._HttpClient.delete(
-      `${BASE_URL}/categories/deleteCategory/${categoryId}`,
-    );
+    return this._HttpClient.delete(`${BASE_URL}/categories/deleteCategory/${categoryId}`);
   }
 }

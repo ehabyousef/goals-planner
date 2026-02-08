@@ -93,7 +93,10 @@
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 px-4">
       @for (item of goals(); track $index) {
         <div class="rounded-xl shadow-xl overflow-hidden">
-          <div class="h-60 flex items-center justify-center relative">
+          <div
+            class="h-60 flex items-center justify-center relative cursor-pointer"
+            [routerLink]="'/goals/' + item._id"
+          >
             <img
               [src]="item.image?.url"
               alt="{{ item.title }}"

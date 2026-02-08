@@ -4,7 +4,7 @@ import { HlmBreadCrumbImports } from './../../../../libs/ui/breadcrumb/src/index
 import { HlmTooltipImports } from './../../../../libs/ui/tooltip/src/index';
 import { HlmSpinnerImports } from './../../../../libs/ui/spinner/src/index';
 import { Component, signal, viewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
@@ -21,10 +21,12 @@ import {
   lucideLock,
   lucideCheck,
   lucideCircle,
+  lucideTrash,
 } from '@ng-icons/lucide';
 import { Tasks } from '../../core/services/tasks.service';
 import { EditGoalModal } from '../../components/edit-goal-modal/edit-goal-modal';
 import { TaskModal } from '../../components/task-modal/task-modal';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-goal-details',
@@ -52,6 +54,7 @@ import { TaskModal } from '../../components/task-modal/task-modal';
       lucideLock,
       lucideCheck,
       lucideCircle,
+      lucideTrash,
     }),
   ],
   templateUrl: './goal-details.html',
@@ -62,6 +65,7 @@ export class GoalDetails {
     private _GoalService: GoalService,
     private _TasksServices: Tasks,
     private _ActivatedRoute: ActivatedRoute,
+    private _Router: Router,
   ) {}
   goal = signal<IGoal>({} as IGoal);
   doneTasks = signal<ITask[]>([]);
@@ -70,6 +74,10 @@ export class GoalDetails {
   selectedTask = signal<ITask | undefined>(undefined);
   isLoadingGoal = signal<boolean>(true);
   isLoadingTasks = signal<boolean>(true);
+  currentGoalId = signal<string | undefined>(undefined);
+  goalNotFound = signal<boolean>(false);
+
+  // modals
   editModal = viewChild<EditGoalModal>('editModal');
   addTask = viewChild<TaskModal>('addTask');
   editTaskModal = viewChild<TaskModal>('editTaskModal');
@@ -102,13 +110,21 @@ export class GoalDetails {
     this._ActivatedRoute.params.subscribe((params) => {
       const id = params['id'];
       if (id) {
+        this.currentGoalId.set(id);
         this.Goal(id);
       }
     });
   }
 
-  Goal(id: string) {
+  Goal(id: string | undefined) {
+    if (!id) {
+      this.goalNotFound.set(true);
+      this.isLoadingGoal.set(false);
+      return;
+    }
     this.isLoadingGoal.set(true);
+    this.goalNotFound.set(false);
+    this.currentGoalId.set(id);
     this._GoalService.singleGoal(id).subscribe({
       next: (res) => {
         this.goal.set(res.goal);
@@ -117,7 +133,27 @@ export class GoalDetails {
       },
       error: (err) => {
         this.isLoadingGoal.set(false);
-        console.error(err);
+        this.goalNotFound.set(
+          err?.status === 404 || err?.error?.message === 'goal not found or unauthorized',
+        );
+        this.doneTasks.set([]);
+        this.progressTasks.set([]);
+        this.comingTasks.set([]);
+        if (!this.goalNotFound()) {
+          toast.error('Failed to load goal');
+        }
+      },
+    });
+  }
+
+  deleteGoal(id: string | undefined) {
+    this._GoalService.deleteGoal(id).subscribe({
+      next: (res) => {
+        toast.warning('goal deleted successfully');
+         this.Goal(id);
+      },
+      error: (err) => {
+        toast.warning('goal cant be deleted');
       },
     });
   }
@@ -139,5 +175,13 @@ export class GoalDetails {
         console.error(err);
       },
     });
+  }
+
+  goBack(): void {
+    this._Router.navigate(['/goals']);
+  }
+
+  retry(): void {
+    this.Goal(this.currentGoalId());
   }
 }

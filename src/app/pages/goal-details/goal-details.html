@@ -33,6 +33,24 @@
         <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3"></div>
       </div>
     </div>
+  } @else if (goalNotFound()) {
+    <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm mb-6 text-center space-y-4">
+      <div class="flex justify-center">
+        <div
+          class="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center"
+        >
+          <ng-icon hlm name="lucideAlertCircle" size="lg" class="text-red-600" />
+        </div>
+      </div>
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Goal not found</h2>
+      <p class="text-slate-600 dark:text-slate-400">
+        We couldn't find a goal for this link or you don't have access to it.
+      </p>
+      <div class="flex justify-center gap-3">
+        <button hlmBtn variant="outline" (click)="goBack()">Back to Goals</button>
+        <button hlmBtn (click)="retry()">Retry</button>
+      </div>
+    </div>
   } @else {
     <div class="bg-white dark:bg-slate-950 rounded-xl p-6 shadow-sm mb-6">
       <div class="flex items-center justify-between mb-3">
@@ -57,17 +75,24 @@
             <ng-icon hlm name="lucidePencil" size="sm" />
             Edit Goal
           </button>
+          <button
+            (click)="deleteGoal(goal()._id)"
+            hlmBtn
+            size="sm"
+            class="gap-2 bg-red-600 hover:bg-red-700"
+            [disabled]="!goal()"
+          >
+            <ng-icon hlm name="lucideTrash" size="sm" />
+            remove Goal
+          </button>
         </div>
       </div>
 
       <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-        {{ goal().title || 'Launch New Portfolio' }}
+        {{ goal().title || 'Launch New Goal' }}
       </h1>
       <p class="text-slate-600 dark:text-slate-400 mb-6">
-        {{
-          goal().description ||
-            'Complete 5 professional case studies, refine visual identity, and deploy the finished project to a custom domain with SEO optimization.'
-        }}
+        {{ goal().description || 'there are no tasks create goal then add ones ' }}
       </p>
 
       <!-- Progress Section -->
