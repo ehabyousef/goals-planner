@@ -11,10 +11,12 @@ import { HlmAvatarImports } from '../../../../libs/ui/avatar/src';
 import { HlmButtonImports } from '../../../../libs/ui/button/src';
 import { HlmInputImports } from '../../../../libs/ui/input/src';
 import { ThemeService } from '../../core/services/theme.service';
+import { SearchService } from '../../core/services/search.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
-  imports: [NgIcon, HlmInputImports, HlmButtonImports, HlmAvatarImports],
+  imports: [NgIcon, HlmInputImports, HlmButtonImports, HlmAvatarImports, FormsModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
   host: {
@@ -31,8 +33,15 @@ import { ThemeService } from '../../core/services/theme.service';
 })
 export class Navbar {
   protected readonly themeService = inject(ThemeService);
+  protected readonly searchService = inject(SearchService);
+
+  searchQuery = '';
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
+  }
+
+  onSearchChange(value: string): void {
+    this.searchService.setSearchQuery(value);
   }
 }

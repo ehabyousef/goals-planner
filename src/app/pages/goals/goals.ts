@@ -1,6 +1,6 @@
 import { HlmSpinnerImports } from './../../../../libs/ui/spinner/src/index';
 import { HlmPaginationImports } from './../../../../libs/ui/pagination/src/index';
-import { Component, signal, viewChild } from '@angular/core';
+import { Component, signal, viewChild, computed, inject } from '@angular/core';
 import { ICategories, IGoal } from '../../core/interface/Types';
 import { GoalService } from '../../core/services/goal-service';
 import { Modal } from '../../components/modal/modal';
@@ -12,6 +12,7 @@ import { BrnSelectImports } from '@spartan-ng/brain/select';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { DatePipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { SearchService } from '../../core/services/search.service';
 @Component({
   selector: 'app-goals',
   imports: [
@@ -36,12 +37,28 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class Goals {
-  allProducts: IGoal[] = [];
-  constructor(private _GoalService: GoalService) {}
-  goals = signal<IGoal[]>([]);
+  private _GoalService = inject(GoalService);
+  private _searchService = inject(SearchService);
+
+  allGoalsData = signal<IGoal[]>([]);
   categories = signal<ICategories[]>([]);
   isLoading = signal<boolean>(true);
   modalComponent = viewChild<Modal>('modalComponent');
+
+  // Filtered goals based on search query
+  goals = computed(() => {
+    const searchQuery = this._searchService.searchQuery();
+    const all = this.allGoalsData();
+
+    if (!searchQuery) {
+      return all;
+    }
+
+    return all.filter(goal =>
+      goal.title.toLowerCase().includes(searchQuery) ||
+      goal.description?.toLowerCase().includes(searchQuery)
+    );
+  });
 
   // Pagination state
   currentPage = signal<number>(1);
@@ -58,7 +75,7 @@ export class Goals {
     this.isLoading.set(true);
     this._GoalService.getAllGoals(page, this.limit).subscribe({
       next: (res) => {
-        this.goals.set(res.goals);
+        this.allGoalsData.set(res.goals);
         this.currentPage.set(res.pagination.currentPage);
         this.totalPages.set(res.pagination.totalPages);
         this.totalGoals.set(res.pagination.totalGoals);

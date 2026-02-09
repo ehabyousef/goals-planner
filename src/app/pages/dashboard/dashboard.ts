@@ -1,7 +1,7 @@
 import { HlmProgressImports } from './../../../../libs/ui/progress/src/index';
 import { HlmCardImports } from './../../../../libs/ui/card/src/index';
 import { HlmSpinnerImports } from './../../../../libs/ui/spinner/src/index';
-import { Component, signal, viewChild } from '@angular/core';
+import { Component, signal, viewChild, computed, inject } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideFlag,
@@ -21,6 +21,7 @@ import { DatePipe, NgClass } from '@angular/common';
 import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { Tasks } from '../../core/services/tasks.service';
+import { SearchService } from '../../core/services/search.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -51,30 +52,46 @@ import { Tasks } from '../../core/services/tasks.service';
   ],
 })
 export class Dashboard {
-  constructor(
-    private _GoalService: GoalService,
-    private _TasksServices: Tasks,
-  ) {}
+  private _GoalService = inject(GoalService);
+  private _TasksServices = inject(Tasks);
+  private _searchService = inject(SearchService);
+
   public value = 43;
-  goals = signal<IGoal[]>([]);
+  allGoals = signal<IGoal[]>([]);
   AllTasks = signal<ITask[]>([]);
   Tasks = signal<ITask[]>([]);
   isLoadingGoals = signal<boolean>(true);
   isLoadingTasks = signal<boolean>(true);
   modalComponent = viewChild<Modal>('modalComponent');
 
+  // Filtered goals based on search query
+  goals = computed(() => {
+    const searchQuery = this._searchService.searchQuery();
+    const all = this.allGoals();
+
+    if (!searchQuery) {
+      return all;
+    }
+
+    return all.filter(
+      (goal) =>
+        goal.title.toLowerCase().includes(searchQuery) ||
+        goal.description?.toLowerCase().includes(searchQuery),
+    );
+  });
+
   ngOnInit() {
-    this.allGoals();
+    this.getAllGoals();
     this.allTasks();
   }
 
-  allGoals(): void {
+  getAllGoals(): void {
     this.isLoadingGoals.set(true);
     this._GoalService.getAllGoals().subscribe({
       next: (res) => {
         if (res) {
           console.log(res.goals);
-          this.goals.set(res.goals);
+          this.allGoals.set(res.goals);
         }
         this.isLoadingGoals.set(false);
       },

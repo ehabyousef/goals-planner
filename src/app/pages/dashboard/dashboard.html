@@ -17,21 +17,21 @@
   </div>
   <!-- cards of statics  -->
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 my-4">
-    <div class="mx-auto w-full max-w-xl ring-0 bg-[var(--sidebar)] shadow-md p-4 rounded-xl">
+    <div class="mx-auto w-full max-w-xl bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 shadow-lg p-4 rounded-xl">
       <div class="w-full flex justify-between items-center">
         <h2 class="text-2xl">Active Goals</h2>
         <ng-icon hlm size="xl" name="lucideFlag" />
       </div>
       <p class="text-5xl my-2">{{ goals().length }}</p>
     </div>
-    <div class="mx-auto w-full max-w-xl ring-0 bg-[var(--sidebar)] shadow-md p-4 rounded-xl">
+    <div class="mx-auto w-full max-w-xl bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 shadow-lg p-4 rounded-xl">
       <div class="w-full flex justify-between items-center">
         <h2 class="text-3xl">Tasks Compeleted</h2>
         <ng-icon hlm size="xl" name="lucideSquareCheckBig" />
       </div>
       <p class="text-3xl my-2">{{ AllTasks().length - Tasks().length }}/{{ AllTasks().length }}</p>
     </div>
-    <div class="mx-auto w-full max-w-xl ring-0 bg-[var(--sidebar)] shadow-md p-4 rounded-xl">
+    <div class="mx-auto w-full max-w-xl bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 shadow-lg p-4 rounded-xl">
       <div class="w-full flex justify-between items-center">
         <h2 class="text-2xl">Overall Progress</h2>
         <ng-icon hlm size="xl" name="lucideTrendingUp" />
@@ -92,7 +92,7 @@
   } @else {
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 px-4">
       @for (item of goals(); track $index) {
-        <div class="rounded-xl shadow-xl overflow-hidden">
+        <div class="rounded-xl shadow-xl overflow-hidden bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20">
           <div
             class="h-60 flex items-center justify-center relative cursor-pointer"
             [routerLink]="'/goals/' + item._id"
@@ -179,7 +179,7 @@
       </div>
     </div>
   } @else {
-    <div class="flex flex-col gap-3 dark:bg-gray-950 bg-slate-200 p-4 rounded-md">
+    <div class="flex flex-col gap-3 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 p-4 rounded-md">
       @for (item of Tasks(); track $index) {
         <div
           class="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-200 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-blue-900"
